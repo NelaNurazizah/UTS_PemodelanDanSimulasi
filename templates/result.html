@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Hasil Simulasi - Sistem Dinamik Ketersediaan Daging Ayam</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f9; }
+        .container { max-width: 1200px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); }
+        h1 { color: #004a8f; text-align: center; border-bottom: 3px solid #004a8f; padding-bottom: 10px; margin-bottom: 20px; }
+        h2 { color: #333; margin-top: 30px; padding-bottom: 5px; border-bottom: 1px solid #ddd; font-size: 1.4em; }
+        .scenario-box { background-color: #e6f7ff; padding: 15px 25px; border-radius: 8px; border: 1px solid #91d5ff; margin-bottom: 30px; }
+        .scenario-box strong { color: #004a8f; font-size: 1.1em; }
+        .chart-container { text-align: center; margin-top: 20px; margin-bottom: 40px; border: 1px solid #eee; padding: 15px; border-radius: 8px; background-color: white; }
+        .chart-container img { max-width: 100%; height: auto; }
+        .back-button { display: inline-block; background-color: #6c757d; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; margin-top: 30px; transition: background-color 0.3s; }
+        .back-button:hover { background-color: #5a6268; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.9em; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: right; }
+        th { background-color: #004a8f; color: white; text-align: center; }
+        .table-wrap { overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>HASIL SIMULASI SISTEM DINAMIK</h1>
+        <div class="scenario-box">
+            <strong>Skenario Kebijakan:</strong> {{ results.scenario_name }}<br>
+            <strong>Tahun Proyeksi:</strong> {{ results.last_historical_year + 1 }} hingga {{ results.last_historical_year + 5 }}
+            <p>Harga awal simulasi ({{ results.last_historical_year }}): {{ results.proj_start_price }} | Proyeksi Harga akhir ({{ results.last_historical_year + 5 }}): {{ results.proj_end_price }}</p>
+        </div>
+
+        <h2>📈 Grafik Supply/Proyeksi Produksi dan Demand/Kebutuhan Nasional</h2>
+        <div class="chart-container">
+            <img src="{{ plots.supply_demand }}" alt="Grafik Proyeksi Supply dan Demand">
+        </div>
+
+        <h2>📊 Grafik Surplus/Defisit dan Hubungannya dengan Harga</h2>
+        <p style="text-align: center; font-style: italic;">(Defisit di bawah garis nol cenderung menaikkan Harga, dan sebaliknya)</p>
+        <div class="chart-container">
+            <img src="{{ plots.sd_price }}" alt="Grafik Surplus Defisit dan Harga">
+        </div>
+
+        <h2>Detail Perhitungan Surplus/Defisit dan Proyeksi</h2>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tahun</th>
+                        <th>Tipe Data</th>
+                        <th>Supply (Ribu Ton)</th>
+                        <th>Demand (Ribu Ton)</th>
+                        <th>Surplus / Defisit (Ribu Ton)</th>
+                        <th>Harga (Rp/kg)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in full_data %}
+                    <tr style="background-color: {% if row.type == 'Proyeksi' %} #fff3e0 {% else %} #ffffff {% endif %}">
+                        <td>{{ row.year }}</td>
+                        <td style="text-align: center;">{{ row.type }}</td>
+                        <td>{{ "%.2f"|format(row.supply) }}</td>
+                        <td>{{ "%.2f"|format(row.demand) }}</td>
+                        <td style="font-weight: bold; color: {% if row.surplus_deficit < 0 %} #c0392b {% else %} #27ae60 {% endif %};">
+                            {{ "%.2f"|format(row.surplus_deficit) }}
+                        </td>
+                        <td>{{ "%.0f"|format(row.price) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <a href="{{ url_for('index') }}" class="back-button">🔄 Jalankan Skenario Simulasi Baru</a>
+    </div>
+</body>
+</html>

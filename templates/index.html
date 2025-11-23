@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Pemodelan Sistem Dinamik Ketersediaan Daging Ayam Ras dan Stabilitas Harga di Indonesia</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f9; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); }
+        h1 { color: #004a8f; text-align: center; border-bottom: 3px solid #004a8f; padding-bottom: 10px; margin-bottom: 20px; }
+        h2 { color: #333; margin-top: 30px; font-size: 1.5em; }
+        .form-section { border: 1px solid #ddd; padding: 25px; margin-bottom: 25px; border-radius: 8px; background-color: #fafafa; }
+        input[type="file"], textarea { width: 100%; padding: 12px; margin-top: 5px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+        .policy-input { display: flex; justify-content: space-between; gap: 20px; margin-bottom: 15px; }
+        .policy-input div { flex: 1; }
+        label { font-weight: bold; display: block; margin-bottom: 5px; color: #555; }
+        input[type="number"] { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { background-color: #007bff; color: white; padding: 12px 20px; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; width: 100%; margin-top: 20px; transition: background-color 0.3s; }
+        button:hover { background-color: #0056b3; }
+        .error { color: #a94442; background-color: #f2dede; padding: 15px; border: 1px solid #ebccd1; border-radius: 4px; margin-bottom: 20px; }
+        .note { background-color: #e9f7ff; padding: 15px; border-left: 5px solid #007bff; margin-top: 20px; font-size: 0.9em; color: #333; }
+        .or-divider { text-align: center; margin: 20px 0; font-weight: bold; color: #999; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Pemodelan Sistem Dinamik Ketersediaan Daging Ayam Ras dan Stabilitas Harga di Indonesia</h1>
+        <p style="text-align: center; font-style: italic;">Aplikasi untuk UTS Teori dan Praktikum Pemodelan dan Simulasi</p>
+
+        {% if error %}
+            <div class="error">
+                <strong>Gagal:</strong> {{ error }}
+            </div>
+        {% endif %}
+
+        <form method="POST" enctype="multipart/form-data">
+            <div class="form-section">
+                <h2>1. Simulasi Kebijakan (Policy Simulation)</h2>
+                <div class="policy-input">
+                    <div>
+                        <label for="policy_prod_change">Peningkatan Produksi (%)</label>
+                        <input type="number" name="policy_prod_change" id="policy_prod_change" value="0" placeholder="Contoh: 10 untuk 10% peningkatan" required>
+                        <small>Masukkan persentase perubahan rata-rata pertumbuhan Produksi (e.g., 10 untuk +10%).</small>
+                    </div>
+                    <div>
+                        <label for="policy_cons_change">Kenaikan Konsumsi (%)</label>
+                        <input type="number" name="policy_cons_change" id="policy_cons_change" value="0" placeholder="Contoh: 5 untuk 5% kenaikan" required>
+                        <small>Masukkan persentase perubahan rata-rata pertumbuhan Konsumsi per Kapita (e.g., 5 untuk +5%).</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>2. Sumber Data Historis (5 Kolom: year, Pproduction_ton, consumption_per_capita_kg, population_thousand, price_rp_per_kg)</h2>
+                
+                <div style="margin-bottom: 20px;">
+                    <label for="file">A. Unggah Dataset (CSV)</label>
+                    <input type="file" name="file" accept=".csv">
+                </div>
+
+                <div class="or-divider">ATAU</div>
+
+                <div>
+                    <label for="manual_data">B. Input Data Manual (Gunakan Koma sebagai Pemisah)</label>
+                    <textarea name="manual_data" rows="6" placeholder="year,Pproduction_ton,consumption_per_capita_kg,population_thousand,price_rp_per_kg&#10;2019,3495,5.7,266911,35500&#10;2020,3219,6.04,270203,35000&#10;..."></textarea>
+                </div>
+                
+                <button type="submit">Jalankan Simulasi Sistem Dinamik</button>
+            </div>
+        </form>
+
+        <div class="note">
+            <strong>Catatan Model:</strong> Proyeksi dilakukan untuk 5 tahun ke depan menggunakan rata-rata pertumbuhan historis yang disesuaikan dengan Kebijakan Anda. Harga dimodelkan berdasarkan besar kecilnya Surplus/Defisit.
+        </div>
+    </div>
+</body>
+</html>
